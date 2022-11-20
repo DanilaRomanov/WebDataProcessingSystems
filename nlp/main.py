@@ -51,7 +51,10 @@ print('doc:', doc)
 print('len text', len(stripped_text))
 # print('len doc', len(doc))
 
-for token in stripped_text[:10]:
-    print(token)
+# for token in stripped_text[:10]:
+#     print(token)
 
+# %%
+
+print(doc.sents)
 # %%
