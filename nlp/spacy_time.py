@@ -1,10 +1,8 @@
 import spacy
 from spacy.pipeline.ner import DEFAULT_NER_MODEL
 
-nlp = spacy.load("en_core_web_sm")
 
-
-def spacy_time(doc):
+def spacy_time(text, nlp):
 
     # print('DOC:', doc)
 
@@ -18,8 +16,10 @@ def spacy_time(doc):
 
     # nlp.add_pipe("ner", config=config)
 
-    doc = nlp(doc)
+    doc = nlp(text)
 
-    for token in doc:
-        print(token.text, token.pos_, token.dep_)
-        # print(nlp.ner())
+    # for token in doc:
+    #     print(token.text, token.pos_, token.dep_)
+    # print(nlp.ner())
+
+    return doc

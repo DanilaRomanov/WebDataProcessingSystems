@@ -1,25 +1,14 @@
+# %% imports
 from beautifulsoup import bs_time
 from spacy_time import spacy_time
+import spacy
 
+# %% nlp load
+nlp = spacy.load("en_core_web_sm")
 
+# %% html document
 html_doc = """
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="author" content="Jacopo Urbani">
-        <link rel="icon" href="data:,">
 
-        <title>Jacopo Urbani</title>
-        <link href="/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/css/style.css" rel="stylesheet">
-    </head>
-
-    <body class="d-flex flex-column min-vh-100">
-
-
-            
 <p><img alt="me" class="img-thumbnail rounded float-end" style="width: 200px" src="img/me.jpg"/> I am an assistant professor in Computer
 Science at the <a href="http://www.cs.vu.nl">Vrije Universiteit Amsterdam</a>
 (VUA) and a guest researcher at <a href="http://www.cwi.nl/">CWI</a>.</p>
@@ -49,6 +38,20 @@ KNAW (Royal Netherlands Academy of Arts and Sciences).</p>
 </html>
 """
 
-doc = bs_time(html_doc)
-# print('Stripped of HTML: \n', doc)
-spacy_time(doc)
+# %%
+stripped_text = bs_time(html_doc)
+print('Stripped of HTML: \n', stripped_text)
+
+
+# %%
+
+doc = spacy_time(stripped_text, nlp)
+
+print('doc:', doc)
+print('len text', len(stripped_text))
+# print('len doc', len(doc))
+
+for token in stripped_text[:10]:
+    print(token)
+
+# %%
