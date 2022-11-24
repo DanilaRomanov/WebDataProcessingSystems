@@ -1,38 +1,42 @@
 # %% imports
-from beautifulsoup import bs_time
+from beautifulsoup import scraping_bbc
 from spacy_time import spacy_time
 import spacy
-import requests
+import pandas as pd
+import numpy as np
 
 # %% nlp load
 nlp = spacy.load("en_core_web_sm")
+lemmatizer = nlp.get_pipe("lemmatizer")
+
+# list to hold tokens
+processed_tokens = np.array([])
 
 # %% html document
-url = "https://www.nytimes.com/international/"
-web_page = requests.get(url)
-html_doc = web_page.text
+url = "https://www.bbc.co.uk/news/uk-63743259"
 
-print('doc:', html_doc)
-
-# %%
-stripped_text = bs_time(html_doc)
-print('Stripped of HTML: \n', stripped_text)
-
+stripped_text = scraping_bbc(url)
+# print('Stripped of HTML: \n', stripped_text)
 
 # %%
+
+
+# %% Tokenization
 
 doc = spacy_time(stripped_text, nlp)
 
 # %%
-
-# print('doc:', doc)
 print('len text', len(stripped_text))
 print('len doc', len(doc))
 
 
-# %%
+# %% Print tokens collected (doc)
+tokens = doc
 
+for token in tokens[:50]:
+    print(token, token.pos_)
+    # print(token.pos_)
+# %% for each token, add a lemma tag?
 
-for token in doc[:10]:
-    print(token)
+# lemmatizer requires pos-tags
 # %%
