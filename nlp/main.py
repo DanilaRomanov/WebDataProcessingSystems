@@ -16,26 +16,45 @@ processed_tokens = np.array([])
 url = "https://www.bbc.co.uk/news/uk-63743259"
 
 stripped_text = scraping_bbc(url)
-# print('Stripped of HTML: \n', stripped_text)
 
-# %%
+# %% array to string
 
+# text = np.array_str(stripped_text)
+# text = np.array2string(stripped_text, precision=2, separator=",")
+text = ' '.join(map(str, stripped_text))
 
-# %% Tokenization
+# print(text)
 
-doc = spacy_time(stripped_text, nlp)
+# %% SPACY TIME - read text and return doc to work with
 
-# %%
-print('len text', len(stripped_text))
-print('len doc', len(doc))
+doc = spacy_time(text, nlp)
 
+# %% creating df and empty arrays
 
-# %% Print tokens collected (doc)
+df = pd.DataFrame()
+
+token_text = np.array([])
+pos = np.array([])
+lemma = np.array([])
+
+# %% tokenize, pos tag, lemma and add to dataframe
+
 tokens = doc
 
 for token in tokens[:50]:
     print(token, token.pos_)
-    # print(token.pos_)
+    token_text = np.append(token_text, token)
+    pos = np.append(pos, token.pos_)
+    lemma = np.append(lemma, token.lemma_)
+
+df['token'] = token_text
+df['pos tag'] = pos
+df['lemma'] = lemma
+
+# %% print df
+
+print(df.head())
+
 # %% for each token, add a lemma tag?
 
 # lemmatizer requires pos-tags

@@ -17,23 +17,23 @@ def scraping_bbc(url):
 
     # getting text
     article = soup.find("article")
-    links = article.find_all('a')
-    title = article.find_all('h1')
-    text = article.find_all('p')
+    article_links = article.find_all('a')
+    article_title = article.find_all('h1')
+    article_text = article.find_all('p')
     subtitles = article.find_all('span')
 
-    # article text
-    for p in text:
-        # print(p.get_text())
-        text = np.append(text, p.get_text())
-
     # article titles
-    for h1 in title:
+    for h1 in article_title:
         # print(h1.get_text())
         text = np.append(text, h1.get_text())
 
+    # article text
+    for p in article_text:
+        # print(p.get_text())
+        text = np.append(text, p.get_text())
+
     # article links
-    for l in links:
+    for l in article_links:
         link = l.get('href')
 
         if 'http' not in link:

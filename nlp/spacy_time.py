@@ -1,5 +1,5 @@
-import spacy
 from spacy.pipeline.ner import DEFAULT_NER_MODEL
+import numpy as np
 
 
 def spacy_time(text, nlp):
@@ -16,6 +16,7 @@ def spacy_time(text, nlp):
 
     # nlp.add_pipe("ner", config=config)
 
+    # text = np.array_str(text)
     doc = nlp(text)
 
     # for token in doc:
