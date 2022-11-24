@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 # %% nlp load
-nlp = spacy.load("en_core_web_sm")
+nlp = spacy.load("en_core_web_md")
 # lemmatizer = nlp.get_pipe("lemmatizer")
 # ner = nlp.add_pipe("ner")
 
@@ -63,17 +63,10 @@ tokens_df.head(20)
 
 # %% prints
 
-# token = tokens[0]
-# print(token)
-# print(token.text)
-# print(token.ent_type_)  # geopolitical entity
-# print(token.left_edge)
-
 # sentence1 = list(tokens.sents)
 # print(list(tokens.sents))
 # displacy.render(sentence1, style="dep")  # cool pics showing relations between tokens
-# display which highlights entities in the text!!
-displacy.render(doc, style="ent")
+# displacy.render(doc, style="ent") # display which highlights entities in the text!!
 
 
 # %% Named Entity Recognition
@@ -100,7 +93,17 @@ ner_df['ner_type'] = ner_types
 
 ner_df.head(10)
 
+# %% checking the first article's similarity to another article (uses word2vec on document level, i think)
+
+url2 = 'https://www.bbc.com/news/business-63715388'
+stripped_text2 = scraping_bbc(url2)
+text2 = ' '.join(map(str, stripped_text2))
+doc2 = spacy_time(text2, nlp)
+
+print(doc.similarity(doc2))  # the two articles were 98% similar!!
 # %%
 
+# SO EVERYTHING NEEDS TO BE IN VECTORS IN THE END IN ORDER TO DO TRAINING
+# that can be extracted from the dataframes
 
 # %%
