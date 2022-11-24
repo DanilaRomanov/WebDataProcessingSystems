@@ -45,8 +45,8 @@ synt_dep = np.array([])
 
 tokens = doc
 
-for token in tokens[:50]:
-    print(token, token.ent_type_)
+for token in tokens:
+    # print(token, token.ent_type_)
     token_text = np.append(token_text, token)
     pos = np.append(pos, token.pos_)
     lemma = np.append(lemma, token.lemma_)
@@ -54,14 +54,12 @@ for token in tokens[:50]:
     synt_dep = np.append(synt_dep, token.dep_)
 
 tokens_df['token'] = token_text
-tokens_df['pos tag'] = pos
+tokens_df['pos_tag'] = pos
 tokens_df['lemma'] = lemma
-tokens_df['entity type'] = ent_type
-tokens_df['syntactic dependency'] = synt_dep
+tokens_df['entity_type'] = ent_type
+tokens_df['syntactic_dependency'] = synt_dep
 
-# %% print df
-
-print(tokens_df.head(20))
+tokens_df.head(20)
 
 # %% prints
 
@@ -71,26 +69,38 @@ print(tokens_df.head(20))
 # print(token.ent_type_)  # geopolitical entity
 # print(token.left_edge)
 
-
-sentence1 = list(tokens.sents)
-print(list(tokens.sents))
-displacy.render(sentence1, style="dep")  # cool pics
+# sentence1 = list(tokens.sents)
+# print(list(tokens.sents))
+# displacy.render(sentence1, style="dep")  # cool pics showing relations between tokens
+# display which highlights entities in the text!!
+displacy.render(doc, style="ent")
 
 
 # %% Named Entity Recognition
+
+# save entities to df i guess. entities are those tokens with entity types.
+
+ner_df = pd.DataFrame()
+
+ner_labels = np.array([])
+ner_types = np.array([])
 
 # doc.ents are the named entities in the document.
 # Returns a tuple of named entity Span objects, if the entity recognizer has been applied.
 # recognizes when whitespace is necessary, such as in a persons name
 
-# save entities to df i guess
-
-ent_labels = np.array([])
-
-
 for ent in doc.ents[:50]:
-    print(ent.text, ent.label_)
+    # print(ent.text, ent.label_)
+
+    ner_labels = np.append(ner_labels, ent.text)
+    ner_types = np.append(ner_types, ent.label_)
+
+ner_df['label'] = ner_labels
+ner_df['ner_type'] = ner_types
+
+ner_df.head(10)
 
 # %%
+
 
 # %%
