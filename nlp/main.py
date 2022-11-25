@@ -103,23 +103,23 @@ wikidata_link = np.array([])
 for en in doc._.linkedEntities:
 
     print(
-        f'entity {en.get_span()} | {en.get_label()} | {en.get_description()} | {en.get_url()}')
+        f'entity: {en.get_span()} | {en.get_label()} | {en.get_description()} | {en.get_url()}')
 
-    entity_text = np.append(entity_text, en.get_span())
-    # OKAY THIS WORKS BUT SOME INDEX SHIT HAPPENS HERE
-    wiki_entity = np.append(wiki_entity, en.get_label(
-    )) if en.get_label() else np.append(wiki_entity, 'NONE')
-    wiki_desc = np.append(wiki_desc, en.get_description())
-    wikidata_id = np.append(wikidata_id, en.get_id())
-    wikidata_link = np.append(wikidata_link, en.get_url())
+    # entity_text = np.append(entity_text, en.get_span())
+    # # OKAY THIS WORKS BUT SOME INDEX SHIT HAPPENS HERE
+    # wiki_entity = np.append(wiki_entity, en.get_label(
+    # )) if en.get_label() else np.append(wiki_entity, 'NONE')
+    # wiki_desc = np.append(wiki_desc, en.get_description())
+    # wikidata_id = np.append(wikidata_id, en.get_id())
+    # wikidata_link = np.append(wikidata_link, en.get_url())
 
-entity_linking_df['entity_text'] = entity_text
-entity_linking_df['wikipedia_entity'] = wiki_entity
-entity_linking_df['wikipedia_description'] = wiki_desc
-entity_linking_df['wikidata_id'] = wikidata_id
-entity_linking_df['wikidata_link'] = wikidata_link
+# entity_linking_df['entity_text'] = entity_text
+# entity_linking_df['wikipedia_entity'] = wiki_entity
+# entity_linking_df['wikipedia_description'] = wiki_desc
+# entity_linking_df['wikidata_id'] = wikidata_id
+# entity_linking_df['wikidata_link'] = wikidata_link
 
-entity_linking_df.head(10)
+# entity_linking_df.head(10)
 
 # %% prints
 
