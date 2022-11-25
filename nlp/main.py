@@ -6,33 +6,31 @@ import spacy
 import pandas as pd
 import numpy as np
 
-# %% nlp load
+# %% pipeline
 nlp = spacy.load("en_core_web_md")
-# lemmatizer = nlp.get_pipe("lemmatizer")
-# ner = nlp.add_pipe("ner")
+# this gives an error in spacy_time function
+nlp.add_pipe("entityLinker", last=True)
 
-# list to hold tokens
+# %% list to hold tokens
 processed_tokens = np.array([])
 
-# %% html document
+# html document
 url = "https://www.bbc.co.uk/news/uk-63743259"
-
 stripped_text = scraping_bbc(url)
 
-# %% array to string
-
-# text = np.array_str(stripped_text)
-# text = np.array2string(stripped_text, precision=2, separator=",")
+# %%
+# array to string
 text = ' '.join(map(str, stripped_text))
 
-# print(text)
+# THIS GIVES AN ERROR BECAUSE OF '...' IN THE TEXT. lets fix it
 
-# %% SPACY TIME - read text and return doc to work with
+text = text[:4960]
+print(text)
 
+# %% SPACY - read text and return doc to work with
 doc = spacy_time(text, nlp)
 
 # %% creating df and empty arrays
-
 tokens_df = pd.DataFrame()
 
 token_text = np.array([])
@@ -61,20 +59,9 @@ tokens_df['syntactic_dependency'] = synt_dep
 
 tokens_df.head(20)
 
-# %% prints
-
-# sentence1 = list(tokens.sents)
-# print(list(tokens.sents))
-# displacy.render(sentence1, style="dep")  # cool pics showing relations between tokens
-# displacy.render(doc, style="ent") # display which highlights entities in the text!!
-
-
 # %% Named Entity Recognition
 
-# save entities to df i guess. entities are those tokens with entity types.
-
 ner_df = pd.DataFrame()
-
 ner_labels = np.array([])
 ner_types = np.array([])
 
@@ -83,8 +70,6 @@ ner_types = np.array([])
 # recognizes when whitespace is necessary, such as in a persons name
 
 for ent in doc.ents[:50]:
-    # print(ent.text, ent.label_)
-
     ner_labels = np.append(ner_labels, ent.text)
     ner_types = np.append(ner_types, ent.label_)
 
@@ -101,9 +86,18 @@ text2 = ' '.join(map(str, stripped_text2))
 doc2 = spacy_time(text2, nlp)
 
 print(doc.similarity(doc2))  # the two articles were 98% similar!!
-# %%
 
-# SO EVERYTHING NEEDS TO BE IN VECTORS IN THE END IN ORDER TO DO TRAINING
-# that can be extracted from the dataframes
+# %% Entity Linking
+
+sentences = list(doc.sents)
+named_entities = list(doc.ents)
+
+print(doc._.linkedEntities.pretty_print())
+
+# cool pics showing relations between tokens
+# displacy.render(sentence1, style="dep")
+# display which highlights entities in the text!!
+# displacy.render(doc, style="ent")
+
 
 # %%
