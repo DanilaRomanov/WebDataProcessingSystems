@@ -1,6 +1,6 @@
 # %% imports
 from spacy import displacy
-from beautifulsoup import scraping_bbc
+from beautifulsoup import scraping_bbc, scraping_wikipedia
 from spacy_time import spacy_time
 import spacy
 import pandas as pd
@@ -15,8 +15,11 @@ nlp.add_pipe("entityLinker", last=True)
 processed_tokens = np.array([])
 
 # html document
-url = "https://www.bbc.co.uk/news/uk-63743259"
-stripped_text = scraping_bbc(url)
+# url = "https://www.bbc.co.uk/news/uk-63743259"
+# stripped_text = scraping_bbc(url)
+
+url_wikipedia = 'https://en.wikipedia.org/wiki/Dutch_conquest_of_the_Banda_Islands'
+stripped_text = scraping_wikipedia(url_wikipedia)
 
 # %%
 # array to string
@@ -24,11 +27,12 @@ text = ' '.join(map(str, stripped_text))
 
 # THIS GIVES AN ERROR BECAUSE OF '...' IN THE TEXT. lets fix it
 
-text = text[:4960]
+# text = text[:4960]
 print(text)
 
 # %% SPACY - read text and return doc to work with
 doc = spacy_time(text, nlp)
+# print(doc)
 
 # %% creating df and empty arrays
 tokens_df = pd.DataFrame()
@@ -80,53 +84,16 @@ ner_df.head(10)
 
 # %% checking the first article's similarity to another article (uses word2vec on document level, i think)
 
-url2 = 'https://www.bbc.com/news/business-63715388'
-stripped_text2 = scraping_bbc(url2)
-text2 = ' '.join(map(str, stripped_text2))
-doc2 = spacy_time(text2, nlp)
+# url2 = 'https://www.bbc.com/news/business-63715388'
+# stripped_text2 = scraping_bbc(url2)
+# text2 = ' '.join(map(str, stripped_text2))
+# doc2 = spacy_time(text2, nlp)
 
-print(doc.similarity(doc2))  # the two articles were 98% similar!!
+# print(doc.similarity(doc2))  # the two articles were 98% similar!!
 
 # %% Entity Linking
 
-sentences = list(doc.sents)
-named_entities = list(doc.ents)
+# for en in doc._.linkedEntities:
 
-entity_linking_df = pd.DataFrame()
-
-entity_text = np.array([])
-wiki_entity = np.array([])
-wiki_desc = np.array([])
-wikidata_id = np.array([])
-wikidata_link = np.array([])
-
-for en in doc._.linkedEntities:
-
-    print(
-        f'entity: {en.get_span()} | {en.get_label()} | {en.get_description()} | {en.get_url()}')
-
-    # entity_text = np.append(entity_text, en.get_span())
-    # # OKAY THIS WORKS BUT SOME INDEX SHIT HAPPENS HERE
-    # wiki_entity = np.append(wiki_entity, en.get_label(
-    # )) if en.get_label() else np.append(wiki_entity, 'NONE')
-    # wiki_desc = np.append(wiki_desc, en.get_description())
-    # wikidata_id = np.append(wikidata_id, en.get_id())
-    # wikidata_link = np.append(wikidata_link, en.get_url())
-
-# entity_linking_df['entity_text'] = entity_text
-# entity_linking_df['wikipedia_entity'] = wiki_entity
-# entity_linking_df['wikipedia_description'] = wiki_desc
-# entity_linking_df['wikidata_id'] = wikidata_id
-# entity_linking_df['wikidata_link'] = wikidata_link
-
-# entity_linking_df.head(10)
-
-# %% prints
-
-# cool pics showing relations between tokens
-# displacy.render(sentence1, style="dep")
-# display which highlights entities in the text!!
-# displacy.render(doc, style="ent")
-
-
-# %%
+#     print(
+#         f'entity: {en.get_span()} | {en.get_label()} | {en.get_description()} | {en.get_url()}')

@@ -4,17 +4,40 @@ import numpy as np
 import re
 
 
-def get_soup(html_doc):
+def get_soup(url):
+    web_page = requests.get(url)
+    html_doc = web_page.content
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 
 
-def scraping_bbc(url):
-    web_page = requests.get(url)
-    html_doc = web_page.content
+def scraping_wikipedia(url):
+    soup = get_soup(url)
     text = np.array([])
 
-    soup = get_soup(html_doc)
+    # saving text
+    body_text = soup.find('div', id="mw-content-text")
+    main_text = body_text.find_all('p')
+    main_text_titles = body_text.find_all('span', {'class': 'mw-headline'})
+
+    for p in main_text:
+        # print(p.get_text())
+        text = np.append(text, p.get_text())
+
+    print('TITLES=========')
+    for span in main_text_titles:
+        # print(span.get_text())
+        text = np.append(text, span.get_text())
+
+    return text
+
+
+def scraping_bbc(url):
+    # web_page = requests.get(url)
+    # html_doc = web_page.content
+    text = np.array([])
+
+    soup = get_soup(url)
 
     # saving text
     article = soup.find("article")
@@ -49,7 +72,3 @@ def scraping_bbc(url):
 
     # return
     return text
-
-
-url = "https://www.bbc.co.uk/news/uk-63743259"
-scraping_bbc(url)
