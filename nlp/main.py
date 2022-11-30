@@ -5,29 +5,30 @@ from spacy_time import spacy_time
 import spacy
 import pandas as pd
 import numpy as np
+import claucy
 
 # %% pipeline
 nlp = spacy.load("en_core_web_md")
 # this gives an error in spacy_time function
 nlp.add_pipe("entityLinker", last=True)
+claucy.add_to_pipe(nlp)
 
 # %% list to hold tokens
 processed_tokens = np.array([])
 
 # html document
-# url = "https://www.bbc.co.uk/news/uk-63743259"
-# stripped_text = scraping_bbc(url)
+url = "https://www.bbc.com/news/world-us-canada-58988523"
+stripped_text = scraping_bbc(url)
 
-url_wikipedia = 'https://en.wikipedia.org/wiki/Dutch_conquest_of_the_Banda_Islands'
-stripped_text = scraping_wikipedia(url_wikipedia)
+# url_wikipedia = 'https://en.wikipedia.org/wiki/Dutch_conquest_of_the_Banda_Islands'
+# stripped_text = scraping_wikipedia(url_wikipedia)
 
 # %%
 # array to string
 text = ' '.join(map(str, stripped_text))
 
 # THIS GIVES AN ERROR BECAUSE OF '...' IN THE TEXT. lets fix it
-
-# text = text[:4960]
+text = text[:4960]
 print(text)
 
 # %% SPACY - read text and return doc to work with
@@ -43,7 +44,7 @@ lemma = np.array([])
 ent_type = np.array([])
 synt_dep = np.array([])
 
-# %% tokenize, pos tag, lemma and add to dataframe
+# %% NLP Preprocessing
 
 tokens = doc
 
@@ -81,6 +82,17 @@ ner_df['label'] = ner_labels
 ner_df['ner_type'] = ner_types
 
 ner_df.head(10)
+
+
+# REMEMBER TO REMOVE DUPLICATES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+
+# %%  Open Relation Extraction - ClausIE
+
+print('==================')
+
+for clause in doc._.clauses:
+    print(clause.to_propositions(as_text=False))
+    # print(clause)
 
 # %% checking the first article's similarity to another article (uses word2vec on document level, i think)
 

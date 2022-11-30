@@ -24,7 +24,7 @@ def scraping_wikipedia(url):
         # print(p.get_text())
         text = np.append(text, p.get_text())
 
-    print('TITLES=========')
+    # print('TITLES=========')
     for span in main_text_titles:
         # print(span.get_text())
         text = np.append(text, span.get_text())
