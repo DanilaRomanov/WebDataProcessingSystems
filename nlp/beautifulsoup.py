@@ -24,25 +24,41 @@ def scraping_wikipedia(url):
         # print(p.get_text())
         text = np.append(text, p.get_text())
 
-    # print('TITLES=========')
-    for span in main_text_titles:
-        # print(span.get_text())
-        text = np.append(text, span.get_text())
+    # for span in main_text_titles:
+    #     # print(span.get_text())
+    #     text = np.append(text, span.get_text())
+
+    return text
+
+
+def scraping_cnn(url):
+    soup = get_soup(url)
+    text = np.array([])
+
+    # saving text
+    article = soup.find('div', {'class': "article__content"})
+    article_text = article.find_all('p')
+
+    # avoid cascading punctuation
+    print('text', article.find_all(text=re.compile("[.]{2,}")))
+
+    # main_text_titles = article_text.find_all('span', {'class': 'mw-headline'})
+
+    for p in article_text:
+        text = np.append(text, p.get_text())
 
     return text
 
 
 def scraping_bbc(url):
-    # web_page = requests.get(url)
-    # html_doc = web_page.content
     text = np.array([])
-
     soup = get_soup(url)
 
     # saving text
     article = soup.find("article")
 
-    print('text', article.find_all(text=re.compile("[.]{2,}")))
+    # avoid cascading punctuation
+    # print('text', article.find_all(text=re.compile("[.]{2,}")))
 
     article_links = article.find_all('a')
     article_title = article.find_all('h1')
@@ -50,14 +66,18 @@ def scraping_bbc(url):
     subtitles = article.find_all('span')
 
     # getting article titles
-    for h1 in article_title:
-        # print(h1.get_text())
-        text = np.append(text, h1.get_text())
+    # for h1 in article_title:
+    # print(h1.get_text())
+    # text = np.append(text, h1.get_text())
 
     # getting article text
     for p in article_text:
         # print(p.get_text())
-        text = np.append(text, p.get_text())
+
+        if ' ... ' in p.get_text():
+            text = np.append(text, p.get_text().replace(' ... ', ' .'))
+        else:
+            text = np.append(text, p.get_text())
 
     # getting article links
     # for l in article_links:
@@ -72,3 +92,8 @@ def scraping_bbc(url):
 
     # return
     return text
+
+
+# url = "https://www.bbc.com/news/uk-63743259"
+# stripped_text = scraping_bbc(url)
+# print('strip', stripped_text)

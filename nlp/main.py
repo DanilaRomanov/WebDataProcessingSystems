@@ -1,50 +1,61 @@
 # %% imports
 from spacy import displacy
-from beautifulsoup import scraping_bbc, scraping_wikipedia
-from spacy_time import spacy_time
+from beautifulsoup import scraping_bbc, scraping_wikipedia, scraping_cnn
+# from spacy_time import spacy_time
 import spacy
 import pandas as pd
 import numpy as np
 import claucy
+import sys
 
-# %% pipeline
+
+# %% ============================================================================================
+
+# pipeline
 nlp = spacy.load("en_core_web_md")
-# this gives an error in spacy_time function
-nlp.add_pipe("entityLinker", last=True)
-claucy.add_to_pipe(nlp)
+nlp.add_pipe("entityLinker", last=True)  # entity linker
+claucy.add_to_pipe(nlp)  # Open IE
 
-# %% list to hold tokens
-processed_tokens = np.array([])
+
+# %% ============================================================================================
 
 # html document
-url = "https://www.bbc.com/news/world-us-canada-58988523"
+url = "https://www.bbc.com/news/uk-63743259"
 stripped_text = scraping_bbc(url)
 
-# url_wikipedia = 'https://en.wikipedia.org/wiki/Dutch_conquest_of_the_Banda_Islands'
-# stripped_text = scraping_wikipedia(url_wikipedia)
+# url_cnn = 'https://edition.cnn.com/2022/12/02/china/china-covid-lockdown-protests-2022-intl-hnk-dst/index.html'
+# stripped_text = scraping_cnn(url_cnn)
 
-# %%
-# array to string
-text = ' '.join(map(str, stripped_text))
+# convert stripped_text array to string for processing
+text = ''.join(map(str, stripped_text))
 
-# THIS GIVES AN ERROR BECAUSE OF '...' IN THE TEXT. lets fix it
-text = text[:4960]
+
+print('\n============= RAW TEXT =============\n')
 print(text)
 
-# %% SPACY - read text and return doc to work with
-doc = spacy_time(text, nlp)
-# print(doc)
 
-# %% creating df and empty arrays
+# %% ============================================================================================
+
+# SPACY - read text and return doc to work with
+print('\n============= STRIPPED TEXT =============\n')
+try:
+    doc = nlp(text)
+    print(doc)
+except:
+    print("Oops!", sys.exc_info()[0], "occurred.")
+
+
+# %% ============================================================================================
+
+# NLP Preprocessing
+print('\n============= NLP PRE-PROCESSING =============\n')
+
 tokens_df = pd.DataFrame()
-
 token_text = np.array([])
 pos = np.array([])
 lemma = np.array([])
 ent_type = np.array([])
 synt_dep = np.array([])
-
-# %% NLP Preprocessing
 
 tokens = doc
 
@@ -64,37 +75,95 @@ tokens_df['syntactic_dependency'] = synt_dep
 
 tokens_df.head(20)
 
-# %% Named Entity Recognition
+
+# %% ============================================================================================
+
+# Named Entity Recognition
+print('\n============= NAMED ENTITY RECOGNITION =============\n')
 
 ner_df = pd.DataFrame()
-ner_labels = np.array([])
+named_entities = np.array([])
 ner_types = np.array([])
 
 # doc.ents are the named entities in the document.
 # Returns a tuple of named entity Span objects, if the entity recognizer has been applied.
 # recognizes when whitespace is necessary, such as in a persons name
 
-for ent in doc.ents[:50]:
-    ner_labels = np.append(ner_labels, ent.text)
+for ent in doc.ents:
+    named_entities = np.append(named_entities, ent.text)
     ner_types = np.append(ner_types, ent.label_)
 
-ner_df['label'] = ner_labels
+ner_df['label'] = named_entities
 ner_df['ner_type'] = ner_types
 
+# ner_df.head(10)
+ner_df = ner_df.drop_duplicates()
 ner_df.head(10)
-
 
 # REMEMBER TO REMOVE DUPLICATES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
 
-# %%  Open Relation Extraction - ClausIE
 
-print('==================')
+# %%  ============================================================================================
+
+
+# Open Relation Extraction - ClausIE
+print('\n============= CLAUSES =============\n')
+
+clauses_df = pd.DataFrame()
+subjects = np.array([])
+preposition = np.array([])
+objects = np.array([])
 
 for clause in doc._.clauses:
-    print(clause.to_propositions(as_text=False))
+    clause_structure = clause
+    clause = clause.to_propositions(
+        as_text=False, inflect=None)[0]
+
+    subjects = np.append(subjects, str(clause[0]))
+    preposition = np.append(preposition, str(clause[1]))
+
+    object = str(clause[2:])
+    # remove parentheses and commas
+    object = object.replace(
+        '(', '').replace(')', '').replace(',', '')
+    objects = np.append(objects, object)
+
+    # print(clause_structure)
     # print(clause)
 
-# %% checking the first article's similarity to another article (uses word2vec on document level, i think)
+clauses_df['subject'] = subjects
+clauses_df['preposition'] = preposition
+clauses_df['object'] = objects
+
+clauses_df = clauses_df.drop_duplicates()
+clauses_df.head(10)
+
+
+# %% ============================================================================================
+
+# Open Relation Extraction - Get the relations in which the usbject and object are named entities
+
+named_entities = ner_df['label'].to_numpy()
+related_entities = np.array([[]])
+
+clauses_df.head()
+for index, row in clauses_df.iterrows():
+    # find subj, obj and prep from dataframe
+    subject = row['subject']
+    object = row['object']
+    relation = row['preposition']
+
+    if subject in named_entities and object in named_entities:
+        # if subj and obj exist in NER-list, save them and their relation to a new list
+        relation = [subject, relation, object]
+        related_entities = np.append(related_entities, relation)
+
+print(related_entities)
+
+
+# %% ============================================================================================
+
+# checking the first article's similarity to another article (uses word2vec on document level, i think)
 
 # url2 = 'https://www.bbc.com/news/business-63715388'
 # stripped_text2 = scraping_bbc(url2)
@@ -103,7 +172,11 @@ for clause in doc._.clauses:
 
 # print(doc.similarity(doc2))  # the two articles were 98% similar!!
 
-# %% Entity Linking
+# %% ============================================================================================
+
+# Entity Linking
+
+# Not allowed to do this :(
 
 # for en in doc._.linkedEntities:
 
