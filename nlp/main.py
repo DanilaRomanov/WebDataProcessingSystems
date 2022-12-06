@@ -20,18 +20,19 @@ claucy.add_to_pipe(nlp)  # Open IE
 # %% ============================================================================================
 
 # html document
-url = "https://www.bbc.com/news/uk-63743259"
+url = "https://en.wikipedia.org/wiki/Yellow_Mansion,_Copenhagen"
 stripped_text = scraping_bbc(url)
 
 # url_cnn = 'https://edition.cnn.com/2022/12/02/china/china-covid-lockdown-protests-2022-intl-hnk-dst/index.html'
 # stripped_text = scraping_cnn(url_cnn)
 
 # convert stripped_text array to string for processing
+
+len = np.prod(stripped_text.shape)
+stripped_text = stripped_text[:len-8]
 text = ''.join(map(str, stripped_text))
-
-
 print('\n============= RAW TEXT =============\n')
-print(text)
+print(stripped_text)
 
 
 # %% ============================================================================================
@@ -42,7 +43,7 @@ try:
     doc = nlp(text)
     print(doc)
 except:
-    print("Oops!", sys.exc_info()[0], "occurred.")
+    print("Error:", sys.exc_info())
 
 
 # %% ============================================================================================
@@ -96,18 +97,16 @@ for ent in doc.ents:
 ner_df['label'] = named_entities
 ner_df['ner_type'] = ner_types
 
-# ner_df.head(10)
+# drop duplicated
 ner_df = ner_df.drop_duplicates()
 ner_df.head(10)
-
-# REMEMBER TO REMOVE DUPLICATES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
 
 
 # %%  ============================================================================================
 
 
 # Open Relation Extraction - ClausIE
-print('\n============= CLAUSES =============\n')
+print('\n============= EXTRACTED RELATIONS =============\n')
 
 clauses_df = pd.DataFrame()
 subjects = np.array([])
@@ -135,6 +134,7 @@ clauses_df['subject'] = subjects
 clauses_df['preposition'] = preposition
 clauses_df['object'] = objects
 
+# drop duplicates
 clauses_df = clauses_df.drop_duplicates()
 clauses_df.head(10)
 
@@ -142,6 +142,8 @@ clauses_df.head(10)
 # %% ============================================================================================
 
 # Open Relation Extraction - Get the relations in which the usbject and object are named entities
+
+print('\n============= RELATIONS INVOLVING NERs =============\n')
 
 named_entities = ner_df['label'].to_numpy()
 related_entities = np.array([[]])

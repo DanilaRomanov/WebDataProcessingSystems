@@ -55,15 +55,15 @@ def scraping_bbc(url):
     soup = get_soup(url)
 
     # saving text
-    article = soup.find("article")
+    # article = soup.find("article")
 
     # avoid cascading punctuation
     # print('text', article.find_all(text=re.compile("[.]{2,}")))
 
-    article_links = article.find_all('a')
-    article_title = article.find_all('h1')
-    article_text = article.find_all('p')
-    subtitles = article.find_all('span')
+    # article_links = article.find_all('a')
+    # article_title = article.find_all('h1')
+    article_text = soup.find_all('p')
+    # subtitles = article.find_all('span')
 
     # getting article titles
     # for h1 in article_title:
@@ -74,8 +74,14 @@ def scraping_bbc(url):
     for p in article_text:
         # print(p.get_text())
 
+        for t in p:
+            match = re.match('\d{3,}', t)
+            if match:
+                print('hello')
+
         if ' ... ' in p.get_text():
-            text = np.append(text, p.get_text().replace(' ... ', ' .'))
+            text = np.append(text, p.get_text().replace(' ... ', ' .. '))
+
         else:
             text = np.append(text, p.get_text())
 
