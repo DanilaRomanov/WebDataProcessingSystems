@@ -29,7 +29,7 @@ stripped_text = scraping_bbc(url)
 # convert stripped_text array to string for processing
 
 len = np.prod(stripped_text.shape)
-stripped_text = stripped_text[len-6:len-8]
+stripped_text = stripped_text[:len-8]
 text = ''.join(map(str, stripped_text))
 print('\n============= RAW TEXT =============\n')
 print(stripped_text)
