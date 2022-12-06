@@ -57,9 +57,6 @@ def scraping_bbc(url):
     # saving text
     # article = soup.find("article")
 
-    # avoid cascading punctuation
-    # print('text', article.find_all(text=re.compile("[.]{2,}")))
-
     # article_links = article.find_all('a')
     # article_title = article.find_all('h1')
     article_text = soup.find_all('p')
@@ -70,20 +67,29 @@ def scraping_bbc(url):
     # print(h1.get_text())
     # text = np.append(text, h1.get_text())
 
+    # article_text = [
+    #     'Carl Friedrich Busky (1743-1808), a wealthy merchant and Prussian consul, acquired the mansion in 1775.\n']
+
     # getting article text
     for p in article_text:
-        # print(p.get_text())
+        p_text = p.get_text()
+        pattern = '\d+\-\d+'
 
-        for t in p:
-            match = re.match('\d{3,}', t)
-            if match:
-                print('hello')
+        if re.findall(pattern, p_text):
+            print('hhhhhhh', p_text)
 
-        if ' ... ' in p.get_text():
-            text = np.append(text, p.get_text().replace(' ... ', ' .. '))
+            matches = re.findall(pattern, p_text)
+
+            for match in matches:
+                print('match', match)
+                p_text = p_text.replace(match, f' {match} ')
+
+        # avoid cascading punctuation
+        if ' ... ' in p_text:
+            text = np.append(text, p_text.replace(' ... ', ' .. '))
 
         else:
-            text = np.append(text, p.get_text())
+            text = np.append(text, p_text)
 
     # getting article links
     # for l in article_links:
