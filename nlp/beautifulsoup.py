@@ -76,17 +76,15 @@ def scraping_bbc(url):
         pattern = '\[\d\]'
 
         if re.findall(pattern, p_text):
-            print('hhhhhhh', p_text)
-
             matches = re.findall(pattern, p_text)
 
             for match in matches:
-                print('match', match)
-                p_text = p_text.replace(match, '')
+                print('match:', match)
+                p_text = p_text.replace(match, ' ')
 
         # avoid cascading punctuation
         if ' ... ' in p_text:
-            text = np.append(text, p_text.replace(' ... ', ' .. '))
+            text = np.append(text, p_text.replace(' ... ', '..'))
 
         else:
             text = np.append(text, p_text)

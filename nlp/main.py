@@ -1,12 +1,13 @@
 # %% imports
-from spacy import displacy
-from beautifulsoup import scraping_bbc, scraping_wikipedia, scraping_cnn
-# from spacy_time import spacy_time
+from get_nlp_doc import get_nlp_doc
+from nlp_preprocessing import nlp_preprocessing
+from clausie_relation_extraction import clausie_rel_extract
+from entity_relation_linking import entity_relation_linking
+from ner import ner
 import spacy
 import pandas as pd
 import numpy as np
 import claucy
-import sys
 
 
 # %% ============================================================================================
@@ -17,150 +18,43 @@ nlp.add_pipe("entityLinker", last=True)  # entity linker
 claucy.add_to_pipe(nlp)  # Open IE
 
 
-# %% ============================================================================================
-
 # html document
-url = "https://en.wikipedia.org/wiki/Yellow_Mansion,_Copenhagen"
-stripped_text = scraping_bbc(url)
+url = "https://www.bbc.com/news/uk-63743259"
 
-# url_cnn = 'https://edition.cnn.com/2022/12/02/china/china-covid-lockdown-protests-2022-intl-hnk-dst/index.html'
-# stripped_text = scraping_cnn(url_cnn)
+# len = np.prod(stripped_text.shape)
+# stripped_text = stripped_text[:len-9]
 
-# convert stripped_text array to string for processing
-
-len = np.prod(stripped_text.shape)
-stripped_text = stripped_text[:len-8]
-text = ''.join(map(str, stripped_text))
-print('\n============= RAW TEXT =============\n')
-print(stripped_text)
-
-
-# %% ============================================================================================
 
 # SPACY - read text and return doc to work with
-print('\n============= STRIPPED TEXT =============\n')
-try:
-    doc = nlp(text)
-    print(doc)
-except:
-    print("Error:", sys.exc_info())
+doc = get_nlp_doc(url, nlp)
 
 
 # %% ============================================================================================
 
 # NLP Preprocessing
-print('\n============= NLP PRE-PROCESSING =============\n')
-
-tokens_df = pd.DataFrame()
-token_text = np.array([])
-pos = np.array([])
-lemma = np.array([])
-ent_type = np.array([])
-synt_dep = np.array([])
-
-tokens = doc
-
-for token in tokens:
-    # print(token, token.ent_type_)
-    token_text = np.append(token_text, token)
-    pos = np.append(pos, token.pos_)
-    lemma = np.append(lemma, token.lemma_)
-    ent_type = np.append(ent_type, token.ent_type_)
-    synt_dep = np.append(synt_dep, token.dep_)
-
-tokens_df['token'] = token_text
-tokens_df['pos_tag'] = pos
-tokens_df['lemma'] = lemma
-tokens_df['entity_type'] = ent_type
-tokens_df['syntactic_dependency'] = synt_dep
-
-tokens_df.head(20)
+tokens_df = nlp_preprocessing(doc)
+tokens_df.head(10)
 
 
 # %% ============================================================================================
 
 # Named Entity Recognition
-print('\n============= NAMED ENTITY RECOGNITION =============\n')
-
-ner_df = pd.DataFrame()
-named_entities = np.array([])
-ner_types = np.array([])
-
-# doc.ents are the named entities in the document.
-# Returns a tuple of named entity Span objects, if the entity recognizer has been applied.
-# recognizes when whitespace is necessary, such as in a persons name
-
-for ent in doc.ents:
-    named_entities = np.append(named_entities, ent.text)
-    ner_types = np.append(ner_types, ent.label_)
-
-ner_df['label'] = named_entities
-ner_df['ner_type'] = ner_types
-
-# drop duplicated
-ner_df = ner_df.drop_duplicates()
-ner_df.head(10)
+ner_df = ner(doc)
+print(ner_df.shape)
+ner_df.head(20)
 
 
 # %%  ============================================================================================
 
-
 # Open Relation Extraction - ClausIE
-print('\n============= EXTRACTED RELATIONS =============\n')
-
-clauses_df = pd.DataFrame()
-subjects = np.array([])
-preposition = np.array([])
-objects = np.array([])
-
-for clause in doc._.clauses:
-    clause_structure = clause
-    clause = clause.to_propositions(
-        as_text=False, inflect=None)[0]
-
-    subjects = np.append(subjects, str(clause[0]))
-    preposition = np.append(preposition, str(clause[1]))
-
-    object = str(clause[2:])
-    # remove parentheses and commas
-    object = object.replace(
-        '(', '').replace(')', '').replace(',', '')
-    objects = np.append(objects, object)
-
-    # print(clause_structure)
-    # print(clause)
-
-clauses_df['subject'] = subjects
-clauses_df['preposition'] = preposition
-clauses_df['object'] = objects
-
-# drop duplicates
-clauses_df = clauses_df.drop_duplicates()
-clauses_df.head(10)
+clauses_df = clausie_rel_extract(doc)
+clauses_df.head(20)
 
 
 # %% ============================================================================================
 
 # Open Relation Extraction - Get the relations in which the usbject and object are named entities
-
-print('\n============= RELATIONS INVOLVING NERs =============\n')
-
-named_entities = ner_df['label'].to_numpy()
-related_entities = np.array([[]])
-
-clauses_df.head()
-for index, row in clauses_df.iterrows():
-    # find subj, obj and prep from dataframe
-    subject = row['subject']
-    object = row['object']
-    relation = row['preposition']
-
-    if subject in named_entities and object in named_entities:
-        # if subj and obj exist in NER-list, save them and their relation to a new list
-        relation = [subject, relation, object]
-        related_entities = np.append(related_entities, relation)
-
-print(related_entities)
+entity_relation_linking(ner_df, clauses_df)
 
 
 # %% ============================================================================================
