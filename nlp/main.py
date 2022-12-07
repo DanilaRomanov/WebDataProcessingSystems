@@ -9,7 +9,6 @@ import pandas as pd
 import numpy as np
 import claucy
 
-
 # %% ============================================================================================
 
 # pipeline
@@ -19,11 +18,7 @@ claucy.add_to_pipe(nlp)  # Open IE
 
 
 # html document
-url = "https://www.bbc.com/news/uk-63743259"
-
-# len = np.prod(stripped_text.shape)
-# stripped_text = stripped_text[:len-9]
-
+url = "https://www.bbc.com/news/world-africa-63745546"
 
 # SPACY - read text and return doc to work with
 doc = get_nlp_doc(url, nlp)
@@ -40,7 +35,6 @@ tokens_df.head(10)
 
 # Named Entity Recognition
 ner_df = ner(doc)
-print(ner_df.shape)
 ner_df.head(20)
 
 
@@ -55,7 +49,6 @@ clauses_df.head(20)
 
 # Open Relation Extraction - Get the relations in which the usbject and object are named entities
 entity_relation_linking(ner_df, clauses_df)
-
 
 # %% ============================================================================================
 
