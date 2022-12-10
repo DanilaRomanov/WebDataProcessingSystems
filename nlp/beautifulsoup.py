@@ -16,24 +16,24 @@ def scraping_bbc(url):
     soup = get_soup(url)
 
     # saving text
-    article_text = soup.find_all('p')
+    article_text = soup.find_all("p")
 
     # getting article text
     for p in article_text:
         p_text = p.get_text()
-        pattern = '\[\d\]'
+        pattern = "\[\d\]"
 
         # remove citations
         if re.findall(pattern, p_text):
             matches = re.findall(pattern, p_text)
 
             for match in matches:
-                print('match:', match)
-                p_text = p_text.replace(match, ' ')
+                print("match:", match)
+                p_text = p_text.replace(match, " ")
 
         # avoid cascading punctuation
-        if ' ... ' in p_text:
-            text = np.append(text, p_text.replace(' ... ', '..'))
+        if " ... " in p_text:
+            text = np.append(text, p_text.replace(" ... ", ".."))
 
         else:
             text = np.append(text, p_text)
