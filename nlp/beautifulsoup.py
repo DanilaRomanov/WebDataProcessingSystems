@@ -39,3 +39,13 @@ def scraping_bbc(url):
             text = np.append(text, p_text)
 
     return text
+
+
+### MAIN FUNCTION THAT WILL BE USED IN PIPELINE ###
+def scrape_webpage(url):
+    # TODO - add more options for websites
+    print(f"Scraping: {url}")
+    if ("bbc" in url) or ("cbc" in url):
+        return scraping_bbc(url)
+    else:
+        pass

@@ -3,10 +3,10 @@ import numpy as np
 import sys
 
 
-def ner(doc):
+def detect_entities(doc):
     try:
         # Named Entity Recognition
-        print('\n============= NAMED ENTITY RECOGNITION =============\n')
+        print("\n============= NAMED ENTITY RECOGNITION =============\n")
 
         ner_df = pd.DataFrame()
         named_entities = np.array([])
@@ -20,8 +20,8 @@ def ner(doc):
             named_entities = np.append(named_entities, ent.text)
             ner_types = np.append(ner_types, ent.label_)
 
-        ner_df['label'] = named_entities
-        ner_df['ner_type'] = ner_types
+        ner_df["label"] = named_entities
+        ner_df["ner_type"] = ner_types
 
         # drop duplicates
         ner_df = ner_df.drop_duplicates()

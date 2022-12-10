@@ -7,7 +7,7 @@ def nlp_preprocessing(doc):
     # NLP Preprocessing
 
     try:
-        print('\n============= NLP PRE-PROCESSING =============\n')
+        print("\n============= NLP PRE-PROCESSING =============\n")
 
         tokens_df = pd.DataFrame()
         token_text = np.array([])
@@ -25,12 +25,30 @@ def nlp_preprocessing(doc):
             ent_type = np.append(ent_type, token.ent_type_)
             synt_dep = np.append(synt_dep, token.dep_)
 
-        tokens_df['token'] = token_text
-        tokens_df['pos_tag'] = pos
-        tokens_df['lemma'] = lemma
-        tokens_df['entity_type'] = ent_type
-        tokens_df['syntactic_dependency'] = synt_dep
+        tokens_df["token"] = token_text
+        tokens_df["pos_tag"] = pos
+        tokens_df["lemma"] = lemma
+        tokens_df["entity_type"] = ent_type
+        tokens_df["syntactic_dependency"] = synt_dep
 
         return tokens_df
+    except:
+        print("Error:", sys.exc_info())
+
+
+def get_nlp_doc(pagetxt, processor, print=False):
+    # convert stripped_text array to string for processing
+    text = " ".join(map(str, pagetxt))
+    if print:
+        print("\n============= RAW TEXT =============\n")
+        print(pagetxt)
+
+    try:
+        doc = processor(text)
+        if print:
+            print("\n============= STRIPPED TEXT =============\n")
+            print(doc)
+
+        return doc
     except:
         print("Error:", sys.exc_info())
