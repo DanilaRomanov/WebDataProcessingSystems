@@ -6,17 +6,35 @@ def get_nlp_doc(url, nlp):
     stripped_text = scraping_bbc(url)
 
     # convert stripped_text array to string for processing
-    text = ' '.join(map(str, stripped_text))
+    # text = ' '.join(map(str, stripped_text))
 
-    print('\n============= RAW TEXT =============\n')
-    print(stripped_text)
+    # print('\n============= RAW TEXT =============\n')
+    # print(stripped_text)
 
     try:
-        doc = nlp(text)
+        for text in stripped_text[0:5]:
+            if(len(text)) < 2:
+                continue
 
-        print('\n============= STRIPPED TEXT =============\n')
-        print(doc)
+            for char in text:
+                if char.isascii():
+                    # char.encode(encoding='UTF-8').decode('ascii')
+                    continue
+                else:
+                    print('========== char:', char)
+                    text = text.replace(char, '')
 
-        return doc
+            print('\n============= RAW TEXT =============\n')
+            print('length:', len(text))
+            text = str(text)
+            print('type:', type(text))
+            print('text:', text)
+
+            doc = nlp(str(text))
+
+            print('\n============= STRIPPED TEXT =============\n')
+            print(doc)
+
+        # return doc
     except:
         print("Error:", sys.exc_info())

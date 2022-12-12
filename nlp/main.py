@@ -18,7 +18,7 @@ claucy.add_to_pipe(nlp)  # Open IE
 
 
 # html document
-url = "https://www.cbc.ca/news/world/trump-organization-taxes-guilty-1.6676368"
+url = "https://en.wikipedia.org/wiki/Brittney_Griner"
 
 # SPACY - read text and return doc to work with
 doc = get_nlp_doc(url, nlp)

@@ -28,7 +28,7 @@ def scraping_bbc(url):
             matches = re.findall(pattern, p_text)
 
             for match in matches:
-                print('match:', match)
+                # print('match:', match)
                 p_text = p_text.replace(match, ' ')
 
         # avoid cascading punctuation
