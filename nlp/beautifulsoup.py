@@ -21,15 +21,12 @@ def scraping_bbc(url):
     # getting article text
     for p in article_text:
         p_text = p.get_text()
-        pattern = '\[\d\]'
+        pattern_citation = '\[\d\]'
+        pattern_comma_numbers = '\d+,\d+'
 
         # remove citations
-        if re.findall(pattern, p_text):
-            matches = re.findall(pattern, p_text)
-
-            for match in matches:
-                # print('match:', match)
-                p_text = p_text.replace(match, ' ')
+        p_text = apply_regex_pattern(pattern_citation, p_text)
+        p_text = apply_regex_pattern(pattern_comma_numbers, p_text)
 
         # avoid cascading punctuation
         if ' ... ' in p_text:
@@ -39,3 +36,20 @@ def scraping_bbc(url):
             text = np.append(text, p_text)
 
     return text
+
+
+def apply_regex_pattern(regex_pattern, p_text):
+    if re.findall((regex_pattern), p_text):
+        matches = re.findall(regex_pattern, p_text)
+
+        for match in matches:
+
+            if regex_pattern == '\d+,\d+':
+                match_comma = match.replace(',', '')
+
+                print('match:', match)
+                p_text = p_text.replace(match, match_comma)
+            else:
+                p_text = p_text.replace(match, '')
+
+    return p_text

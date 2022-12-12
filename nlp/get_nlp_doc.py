@@ -12,7 +12,7 @@ def get_nlp_doc(url, nlp):
     # print(stripped_text)
 
     try:
-        for text in stripped_text[0:5]:
+        for text in stripped_text[0:6]:
             if(len(text)) < 2:
                 continue
 
