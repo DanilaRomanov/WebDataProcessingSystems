@@ -1,40 +1,25 @@
 from beautifulsoup import scraping_bbc
 import sys
+import numpy as np
 
 
 def get_nlp_doc(url, nlp):
     stripped_text = scraping_bbc(url)
+    # doc_array = np.array([])
 
-    # convert stripped_text array to string for processing
-    # text = ' '.join(map(str, stripped_text))
+    try:
+        # print('\n============= RAW TEXT =============\n')
+        # print(str(stripped_text))
 
-    # print('\n============= RAW TEXT =============\n')
-    # print(stripped_text)
+        # for text in stripped_text:
+        #     if(len(text)) < 2:
+        #         continue
+        text = ' '.join(map(str, stripped_text))
+        doc = nlp(text)
 
-    # try:
-    for text in stripped_text[0:6]:
-        if(len(text)) < 2:
-            continue
+        # doc_array = np.append(doc_array, doc)
 
-        for char in text:
-            if char.isascii():
-                # char.encode(encoding='UTF-8').decode('ascii')
-                continue
-            else:
-                print('========== char:', char)
-                text = text.replace(char, '')
-
-        print('\n============= RAW TEXT =============\n')
-        print('length:', len(text))
-        text = str(text)
-        print('type:', type(text))
-        print('text:', text)
-
-        doc = nlp(str(text))
-
-        print('\n============= STRIPPED TEXT =============\n')
-        print(doc)
-
-        # return doc
-    # except:
-    #     print("Error:", sys.exc_info())
+        # print('\n============= STRIPPED TEXT =============\n')
+        return doc
+    except:
+        print("Error:", sys.exc_info())

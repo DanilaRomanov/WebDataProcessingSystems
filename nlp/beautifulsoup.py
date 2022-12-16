@@ -22,18 +22,10 @@ def scraping_bbc(url):
     for p in article_text:
         p_text = p.get_text()
         pattern_citation = '\[\d\]'
-        pattern_comma_numbers = '\d+,\d+'
 
         # remove citations
         p_text = apply_regex_pattern(pattern_citation, p_text)
-        p_text = apply_regex_pattern(pattern_comma_numbers, p_text)
-
-        # avoid cascading punctuation
-        if ' ... ' in p_text:
-            text = np.append(text, p_text.replace(' ... ', '..'))
-
-        else:
-            text = np.append(text, p_text)
+        text = np.append(text, p_text)
 
     return text
 
