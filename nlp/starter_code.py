@@ -3,8 +3,12 @@ import gzip
 KEYNAME = "WARC-TREC-ID"
 
 # The goal of this function process the webpage and returns a list of labels -> entity ID
+
+
 def find_entities(payload):
+    print('payload', payload)
     if payload == '':
+        print('no payload')
         return
 
     # The variable payload contains the source code of a webpage and some
@@ -14,8 +18,10 @@ def find_entities(payload):
 
     key = None
     for line in payload.splitlines():
+        print('line', line)
         if line.startswith(KEYNAME):
             key = line.split(': ')[1]
+            print('key', key)
             break
 
     # Problem 1: The webpage is typically encoded in HTML format.
@@ -44,10 +50,11 @@ def find_entities(payload):
     # discovered disambiguated entities with the same format so that I can
     # check the performance of your program.
 
-    cheats = dict((line.split('\t', 2) for line in open('data/sample-entities-cheat.txt').read().splitlines()))
-    for label, wikipedia_id in cheats.items():
-        if key and (label in payload):
-            yield key, label, wikipedia_id
+    # cheats = dict((line.split('\t', 2) for line in open(
+    #     'data/sample-entities-cheat.txt').read().splitlines()))
+    # for label, wikipedia_id in cheats.items():
+    #     if key and (label in payload):
+    #         yield key, label, wikipedia_id
 
 
 # The goal of this function is to find relations between the entities
@@ -69,7 +76,8 @@ def find_relations(payload, entities):
 
     # Similarly as before, now we are cheating by reading a set of relations
     # from a file. Clearly, this will report the same set of relations for each page
-    tokens = [line.split('\t') for line in open('data/sample-relations-cheat.txt').read().splitlines()]
+    tokens = [line.split('\t') for line in open(
+        'data/sample-relations-cheat.txt').read().splitlines()]
     for label, subject_wikipedia_id, object_wikipedia_id, wikidata_rel_id in tokens:
         if key:
             yield key, subject_wikipedia_id, object_wikipedia_id, label, wikidata_rel_id
@@ -84,6 +92,7 @@ def split_records(stream):
         else:
             payload += line
     yield payload
+
 
 if __name__ == '__main__':
     import sys
@@ -100,5 +109,5 @@ if __name__ == '__main__':
                 print("ENTITY: " + key + '\t' + label + '\t' + wikipedia_id)
             relations = find_relations(record, entities)
             for key, s, o, label, wikidata_id in relations:
-                print("RELATION: " + key + '\t' + s + '\t' + o + '\t' + label + '\t' + wikidata_id)
-
+                print("RELATION: " + key + '\t' + s + '\t' +
+                      o + '\t' + label + '\t' + wikidata_id)
