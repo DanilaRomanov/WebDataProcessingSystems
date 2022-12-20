@@ -4,33 +4,13 @@ import numpy as np
 import re
 
 
-def get_soup(html_doc):
-    # web_page = requests.get(url)
-    # html_doc = web_page.content
+def _get_soup(html_doc):
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 
 
-def scraping_bbc(html_doc):
-    text = np.array([])
-    soup = get_soup(html_doc)
-
-    # saving text
-    article_text = soup.find_all("p")
-
-    # getting article text
-    for p in article_text:
-        p_text = p.get_text()
-        pattern_citation = "\[\d\]"
-
-        # remove citations
-        p_text = apply_regex_pattern(pattern_citation, p_text)
-        text = np.append(text, p_text)
-
-    return text
-
-
-def apply_regex_pattern(regex_pattern, p_text):
+def _apply_regex_pattern(regex_pattern, p_text):
+    text = p_text
     if re.findall((regex_pattern), p_text):
         matches = re.findall(regex_pattern, p_text)
 
@@ -53,5 +33,27 @@ def apply_regex_pattern(regex_pattern, p_text):
 
         else:
             text = np.append(text, p_text)
+
+    return text
+
+
+def fetch_webpage(url):
+    # get html document
+    web_page = requests.get(url)
+    return web_page.content
+
+
+def scrape_webpage(html_doc):
+    text = np.array([])
+    soup = _get_soup(html_doc)
+    # saving text
+    article_text = soup.find_all("p")
+    # getting article text
+    for p in article_text:
+        p_text = p.get_text()
+        pattern_citation = "\[\d\]"
+        # remove citations
+        p_text = _apply_regex_pattern(pattern_citation, p_text)
+        text = np.append(text, p_text)
 
     return text
