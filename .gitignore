@@ -5,3 +5,24 @@
 *.warc
 *.warc.gz
 *.txt
+
+# Entire data folder
+data/
+
+# MacOS files
+.DS_Store
+
+# Python cache
+__pycache__/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environment
+venv/
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/

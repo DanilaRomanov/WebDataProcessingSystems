@@ -1,4 +1,3 @@
-from beautifulsoup import scraping_bbc
 import pandas as pd
 import numpy as np
 import re
