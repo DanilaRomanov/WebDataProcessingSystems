@@ -12,10 +12,7 @@ def ner(doc):
         named_entities = np.array([])
         ner_types = np.array([])
 
-        # doc.ents are the named entities in the document.
-        # Returns a tuple of named entity Span objects, if the entity recognizer has been applied.
-        # recognizes when whitespace is necessary, such as in a persons name
-
+        
         for ent in doc.ents:
             named_entities = np.append(named_entities, ent.text)
             ner_types = np.append(ner_types, ent.label_)

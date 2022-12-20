@@ -8,7 +8,8 @@ from warcio.archiveiterator import ArchiveIterator
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
-from get_nlp_doc import read_warc
+
+from read_warc import read_warc
 from starter_code import find_entities
 
 # pipeline
@@ -24,9 +25,13 @@ claucy.add_to_pipe(nlp)  # Open IE
 # warc_file = 'sample texts/ClueWeb09_English_Sample_File.warc'
 warc_file = 'sample texts/sample.warc'
 
+df = read_warc(warc_file)
+# df.head()
 
-# SPACY - read text and return doc to work with
-doc = get_nlp_doc(warc_file, nlp)
-print(doc)
+for index, row in df.head(1).iterrows():
+    # print('HTML_DOC========================\n', row['HTML_DOC'])
+    # print('WARC-TREC-ID==================\n', row['WARC-TREC-ID'])
+    html_doc = row['HTML_DOC']
+    warc_trec_id = row['WARC-TREC-ID']
 
-# %%
+    doc = get_nlp_doc(html_doc, nlp)

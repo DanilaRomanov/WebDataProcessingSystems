@@ -8,6 +8,7 @@ import spacy
 import pandas as pd
 import numpy as np
 import claucy
+from read_warc import read_warc
 
 # %% ============================================================================================
 
@@ -17,11 +18,19 @@ nlp.add_pipe("entityLinker", last=True)  # entity linker
 claucy.add_to_pipe(nlp)  # Open IE
 
 
-# html document
-url = "https://en.wikipedia.org/wiki/Brittney_Griner"
+warc_file = 'sample texts/sample.warc'
 
-# SPACY - read text and return doc to work with
-doc = get_nlp_doc(url, nlp)
+df = read_warc(warc_file)
+# %%
+
+# MAIN NLP PIPELINE
+for index, row in df.head(1).iterrows():
+    html_doc = row['HTML_DOC']
+    warc_trec_id = row['WARC-TREC-ID']
+
+    doc = get_nlp_doc(html_doc, nlp)
+    tokens_df = nlp_preprocessing(doc)
+    ner_df = ner(doc)
 
 
 # %% ============================================================================================

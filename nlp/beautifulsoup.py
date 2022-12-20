@@ -4,16 +4,16 @@ import numpy as np
 import re
 
 
-def get_soup(url):
-    web_page = requests.get(url)
-    html_doc = web_page.content
+def get_soup(html_doc):
+    # web_page = requests.get(url)
+    # html_doc = web_page.content
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 
 
-def scraping_bbc(url):
+def scraping_bbc(html_doc):
     text = np.array([])
-    soup = get_soup(url)
+    soup = get_soup(html_doc)
 
     # saving text
     article_text = soup.find_all('p')
