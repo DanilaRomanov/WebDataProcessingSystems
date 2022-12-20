@@ -1,0 +1,71 @@
+,label,ner_type
+0,Donald Trump's,PERSON
+1,Tuesday,DATE
+2,Manhattan,GPE
+3,U.S.,GPE
+4,two,CARDINAL
+5,the Trump Organization,ORG
+6,17,CARDINAL
+7,the second day,DATE
+9,New York,GPE
+10,three years,DATE
+11,Trump,ORG
+13,up to $1.6 million,MONEY
+14,US,GPE
+15,Trump,PERSON
+16,Democrats,NORP
+17,Trump Organization,ORG
+18,Alan Futerfas,PERSON
+20,Washington,GPE
+21,Florida,GPE
+22,Mar-a-Lago,DATE
+23,2020,DATE
+24,Justice Department,ORG
+25,Fulton County,GPE
+26,Georgia,GPE
+29,the White House,ORG
+30,last month,DATE
+31,Holocaust,EVENT
+32,Kanye West,PERSON
+34,Constitution,LAW
+36,the Trump Organization's,ORG
+37,Allen Weisselberg,PERSON
+38,Weisselberg,PERSON
+39,five-month,DATE
+42,Jeffrey McConney,PERSON
+46,month-long,DATE
+52,Greatest Political Witch Hunt,WORK_OF_ART
+53,New York City,GPE
+57,RELIANCE,PERSON
+61,$1.7 million,MONEY
+63,McConney,PERSON
+64,W-2,ORG
+65,Joshua Steinglass,PERSON
+71,Steinglass,PERSON
+74,Alvin Bragg,PERSON
+75,Democrat,NORP
+76,January,DATE
+77,Bragg,ORG
+79,District,ORG
+80,Cyrus Vance Jr.,PERSON
+83,Letitia James',PERSON
+86,Republican,NORP
+87,years ago,DATE
+88,last year,DATE
+89,Vance,PERSON
+91,Bragg,GPE
+92,Monday,DATE
+93,CBC News,ORG
+94,first,ORDINAL
+95,CBC/Radio-Canada's,ORG
+96,CBC,ORG
+99,our Submission Guidelines,LAW
+100,Audience Relations,ORG
+101,CBC P.O. Box 500 Station A,ORG
+102,Toronto,GPE
+103,ON  Canada,GPE
+104,1E6,DATE
+105,Canada,GPE
+106,1-866,CARDINAL
+108,Canadians,NORP
+110,CBC Gem,ORG
