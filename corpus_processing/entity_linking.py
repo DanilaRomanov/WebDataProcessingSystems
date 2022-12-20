@@ -55,13 +55,19 @@ def _select_most_popular(views):
 
 def link_entity(entity):
     articles = _get_wikipedia_articles(entity)
-    views = p.article_views(
-        "en.wikipedia",
-        articles,
-        granularity="monthly",
-        start="2022100100",
-        end="2022103100",
-    )
+    if articles == []:
+        return None
+    try:
+        views = p.article_views(
+            "en.wikipedia",
+            articles,
+            granularity="monthly",
+            start="2022100100",
+            end="2022103100",
+        )
+    except:
+        print("No entity found test")
+        return None
     if len(views) == 0:
         print("No entity found")
         return None

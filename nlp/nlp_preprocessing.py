@@ -7,8 +7,6 @@ def nlp_preprocessing(doc):
     # NLP Preprocessing
 
     try:
-        print("\n============= NLP PRE-PROCESSING =============\n")
-
         tokens_df = pd.DataFrame()
         token_text = np.array([])
         pos = np.array([])

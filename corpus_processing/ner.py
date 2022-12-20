@@ -6,13 +6,12 @@ import sys
 def detect_entities(doc):
     try:
         # Named Entity Recognition
-        print("\n============= NAMED ENTITY RECOGNITION =============\n")
+        # print("\n============= NAMED ENTITY RECOGNITION =============\n")
 
         ner_df = pd.DataFrame()
         named_entities = np.array([])
         ner_types = np.array([])
 
-        
         for ent in doc.ents:
             named_entities = np.append(named_entities, ent.text)
             ner_types = np.append(ner_types, ent.label_)
