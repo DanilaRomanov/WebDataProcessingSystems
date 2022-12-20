@@ -2,3 +2,6 @@
 *.tsv
 *.pyc
 .idea
+*.warc
+*.warc.gz
+*.txt

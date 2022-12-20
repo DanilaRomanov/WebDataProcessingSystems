@@ -4,16 +4,16 @@ import numpy as np
 import re
 
 
-def get_soup(url):
-    web_page = requests.get(url)
-    html_doc = web_page.content
+def get_soup(html_doc):
+    # web_page = requests.get(url)
+    # html_doc = web_page.content
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 
 
-def scraping_bbc(url):
+def scraping_bbc(html_doc):
     text = np.array([])
-    soup = get_soup(url)
+    soup = get_soup(html_doc)
 
     # saving text
     article_text = soup.find_all("p")
@@ -21,12 +21,28 @@ def scraping_bbc(url):
     # getting article text
     for p in article_text:
         p_text = p.get_text()
-        pattern = "\[\d\]"
+        pattern_citation = "\[\d\]"
 
         # remove citations
-        if re.findall(pattern, p_text):
-            matches = re.findall(pattern, p_text)
+        p_text = apply_regex_pattern(pattern_citation, p_text)
+        text = np.append(text, p_text)
 
+    return text
+
+
+def apply_regex_pattern(regex_pattern, p_text):
+    if re.findall((regex_pattern), p_text):
+        matches = re.findall(regex_pattern, p_text)
+
+        for match in matches:
+
+            if regex_pattern == "\d+,\d+":
+                match_comma = match.replace(",", "")
+
+                print("match:", match)
+                p_text = p_text.replace(match, match_comma)
+            else:
+                p_text = p_text.replace(match, "")
             for match in matches:
                 print("match:", match)
                 p_text = p_text.replace(match, " ")
@@ -39,13 +55,3 @@ def scraping_bbc(url):
             text = np.append(text, p_text)
 
     return text
-
-
-### MAIN FUNCTION THAT WILL BE USED IN PIPELINE ###
-def scrape_webpage(url):
-    # TODO - add more options for websites
-    print(f"Scraping: {url}")
-    if ("bbc" in url) or ("cbc" in url):
-        return scraping_bbc(url)
-    else:
-        pass

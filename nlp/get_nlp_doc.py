@@ -1,23 +1,20 @@
 from beautifulsoup import scraping_bbc
 import sys
+import numpy as np
+import re
+import shutil
+from warcio.archiveiterator import ArchiveIterator
 
 
-def get_nlp_doc(url, nlp, print=False):
-    stripped_text = scraping_bbc(url)
+def get_nlp_doc(html_doc, nlp, print=False):
+    # get url from warc file
+    # (html_doc, warc_trec_id) = read_warc(warc_file)
 
-    # convert stripped_text array to string for processing
-    text = " ".join(map(str, stripped_text))
-
-    if print:
-        print("\n============= RAW TEXT =============\n")
-        print(stripped_text)
+    # process html-file, get raw text back
+    stripped_text = scraping_bbc(html_doc)
 
     try:
         doc = nlp(text)
-        if print:
-            print("\n============= STRIPPED TEXT =============\n")
-            print(doc)
-
         return doc
     except:
         print("Error:", sys.exc_info())
