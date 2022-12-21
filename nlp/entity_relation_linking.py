@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 
 
+# UNUSED FILE
+
 def entity_relation_linking(ner_df, clauses_df):
     # Open Relation Extraction - Get the relations in which the usbject and object are named entities
 

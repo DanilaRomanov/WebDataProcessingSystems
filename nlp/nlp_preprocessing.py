@@ -18,6 +18,8 @@ def nlp_preprocessing(doc):
 
         tokens = doc
 
+        # applies tokenization, pos-tagging, lemma
+        # finds syntactic dependency and entity type if token is named entity
         for token in tokens:
             token_text = np.append(token_text, token)
             pos = np.append(pos, token.pos_)
@@ -25,6 +27,7 @@ def nlp_preprocessing(doc):
             ent_type = np.append(ent_type, token.ent_type_)
             synt_dep = np.append(synt_dep, token.dep_)
 
+        # put everything into dataframe
         tokens_df['token'] = token_text
         tokens_df['pos_tag'] = pos
         tokens_df['lemma'] = lemma

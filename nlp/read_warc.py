@@ -1,9 +1,6 @@
-from beautifulsoup import scraping_bbc
 import pandas as pd
 import numpy as np
 import re
-import shutil
-from warcio.archiveiterator import ArchiveIterator
 
 
 def read_warc(warc_file):
@@ -15,7 +12,7 @@ def read_warc(warc_file):
 
     # read warc file and split by "WARC/number"
     with open(warc_file, 'rt') as stream:
-        print('reading warc file...')
+        # print('reading warc file...')
 
         read = stream.read()
         split_list = re.split('WARC\/\d\.\d', read)
@@ -28,8 +25,6 @@ def read_warc(warc_file):
                 continue
             if '</html>' not in warc_data:
                 continue
-
-            # print('ITS A VALID WARC DATA!?', warc_data)
 
             one_warc_data = warc_data
 

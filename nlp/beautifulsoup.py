@@ -5,8 +5,6 @@ import re
 
 
 def get_soup(html_doc):
-    # web_page = requests.get(url)
-    # html_doc = web_page.content
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 

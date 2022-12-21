@@ -35,6 +35,8 @@ for index, row in df.head(1).iterrows():
 
 # %% ============================================================================================
 
+# ALL THIS IS EXTRA OTHER STUFF for printing mostly
+
 # NLP Preprocessing
 tokens_df = nlp_preprocessing(doc)
 tokens_df.head(10)

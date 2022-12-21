@@ -12,7 +12,7 @@ def ner(doc):
         named_entities = np.array([])
         ner_types = np.array([])
 
-        
+        # go through named entities found by space and save to df
         for ent in doc.ents:
             named_entities = np.append(named_entities, ent.text)
             ner_types = np.append(ner_types, ent.label_)

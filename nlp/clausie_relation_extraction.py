@@ -3,6 +3,8 @@ import numpy as np
 import sys
 
 
+# UNUSED FILE
+
 def clausie_rel_extract(doc):
 
     try:

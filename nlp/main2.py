@@ -8,9 +8,11 @@ from warcio.archiveiterator import ArchiveIterator
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
-
 from read_warc import read_warc
 from starter_code import find_entities
+
+# UNUSED FILE only for testing
+
 
 # pipeline
 nlp = spacy.load("en_core_web_md")
