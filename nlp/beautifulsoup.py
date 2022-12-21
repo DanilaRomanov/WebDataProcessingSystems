@@ -4,52 +4,56 @@ import numpy as np
 import re
 
 
-def get_soup(html_doc):
+def _get_soup(html_doc):
     soup = BeautifulSoup(html_doc, parser="html.parser", features="lxml")
     return soup
 
 
-def scraping_bbc(url):
-    web_page = requests.get(url)
-    html_doc = web_page.content
-    text = np.array([])
+def _apply_regex_pattern(regex_pattern, p_text):
+    text = p_text
+    if re.findall((regex_pattern), p_text):
+        matches = re.findall(regex_pattern, p_text)
 
-    soup = get_soup(html_doc)
+        for match in matches:
 
-    # saving text
-    article = soup.find("article")
+            if regex_pattern == "\d+,\d+":
+                match_comma = match.replace(",", "")
 
-    print('text', article.find_all(text=re.compile("[.]{2,}")))
+                print("match:", match)
+                p_text = p_text.replace(match, match_comma)
+            else:
+                p_text = p_text.replace(match, "")
+            for match in matches:
+                print("match:", match)
+                p_text = p_text.replace(match, " ")
 
-    article_links = article.find_all('a')
-    article_title = article.find_all('h1')
-    article_text = article.find_all('p')
-    subtitles = article.find_all('span')
+        # avoid cascading punctuation
+        if " ... " in p_text:
+            text = np.append(text, p_text.replace(" ... ", ".."))
 
-    # getting article titles
-    for h1 in article_title:
-        # print(h1.get_text())
-        text = np.append(text, h1.get_text())
+        else:
+            text = np.append(text, p_text)
 
-    # getting article text
-    for p in article_text:
-        # print(p.get_text())
-        text = np.append(text, p.get_text())
-
-    # getting article links
-    # for l in article_links:
-    #     link = l.get('href')
-
-    #     if 'http' not in link:
-    #         # replace with general link (or not??)
-    #         link = 'https://www.bbc.co.uk' + link
-
-        # print(f'link text "{l.get_text()}"')
-        # print(f'link url "{link}"')
-
-    # return
     return text
 
 
-url = "https://www.bbc.co.uk/news/uk-63743259"
-scraping_bbc(url)
+def fetch_webpage(url):
+    # get html document
+    web_page = requests.get(url)
+    return web_page.content
+
+
+def scrape_webpage(html_doc):
+    text = np.array([])
+    soup = _get_soup(html_doc)
+    # saving text
+    article_text = soup.find_all("p")
+    # getting article text
+    for p in article_text:
+        p_text = p.get_text()
+        pattern_citation = "\[\d\]"
+        # remove citations
+        p_text = _apply_regex_pattern(pattern_citation, p_text)
+        text = np.append(text, p_text)
+
+    return text

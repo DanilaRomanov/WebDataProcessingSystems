@@ -1,10 +1,11 @@
 import spacy
 import pathlib
-import coref
 import numpy as np
 import pandas as pd
 from spacy.matcher import Matcher
+
 nlp = spacy.load("en_core_web_md")
+
 
 def find_verbs(doc):
     #Finds verb part of speech tags in a spacy doc
@@ -18,22 +19,31 @@ def find_verbs(doc):
     return verbs
 
 
-
 def longest_span(spans):
     #Finds the longest relation span in a table
     if (len(spans) == 0):
+
         return None
     sorted_spans = sorted(spans, key=lambda s: len(s), reverse=True)
     return sorted_spans[0]
 
 
-
 def create_spans(verbs, doc):
+
     #Syntactic pattern looking for POS tags based on ReVerb's paper
-    patterns = [[{"POS": "VERB"}, {"POS": "PART", "OP": "*"}, {"POS": "ADV", "OP": "*"}],
-                [{"POS": "VERB"}, {"POS": "ADP", "OP": "*"}, {"POS": "DET", "OP": "*"},
-                 {"POS": "AUX", "OP": "*"},
-                 {"POS": "ADJ", "OP": "*"}, {"POS": "ADV", "OP": "*"}]]
+
+    patterns = [
+        [{"POS": "VERB"}, {"POS": "PART", "OP": "*"}, {"POS": "ADV", "OP": "*"}],
+        [
+            {"POS": "VERB"},
+            {"POS": "ADP", "OP": "*"},
+            {"POS": "DET", "OP": "*"},
+            {"POS": "AUX", "OP": "*"},
+            {"POS": "ADJ", "OP": "*"},
+            {"POS": "ADV", "OP": "*"},
+        ],
+    ]
+
 
     matcher = Matcher(nlp.vocab)
     matcher.add("Fluff", patterns)
@@ -49,7 +59,6 @@ def create_spans(verbs, doc):
         res.append(span)
 
     return res
-
 
 
 def create_relation(span, span_index, entities):
@@ -70,6 +79,7 @@ def create_relation(span, span_index, entities):
     relation = (span, left_ent, right_ent)
     return relation
 
+
 def relation_extraction(text):
     doc = nlp(text)
     entities = doc.ents
@@ -83,10 +93,10 @@ def relation_extraction(text):
     for span in verbspans:
         span_index = doc.text.index(span)
         (s, l,r) = create_relation(span, span_index, entities)
-
         if (l is not None and r is not None and str(l) != str(r)):
             relations.append((s,l,r))
 
     #print(relations)
     #print(len(relations))
     return relations
+
