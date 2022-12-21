@@ -1,8 +1,8 @@
 # %% imports
-from get_nlp_doc import get_nlp_doc
-from nlp_preprocessing import nlp_preprocessing
-from clausie_relation_extraction import clausie_rel_extract
-from entity_relation_linking import entity_relation_linking
+from nlp.get_nlp_doc import get_nlp_doc
+from nlp.nlp_preprocessing import nlp_preprocessing
+from corpus_processing.clausie_relation_extraction import clausie_rel_extract
+from corpus_processing.entity_relation_linking import entity_relation_linking
 from ner import ner
 import spacy
 import pandas as pd
