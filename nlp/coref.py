@@ -1,5 +1,5 @@
 import spacy
-nlp = spacy.load("en_coreference_web_trf")
+nlp = spacy.load("en_core_web_trf")
 
 def getClusters(text):
     doc = nlp(text)
