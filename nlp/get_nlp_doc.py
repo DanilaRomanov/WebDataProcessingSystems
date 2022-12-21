@@ -1,4 +1,4 @@
-from beautifulsoup import scraping_bbc
+from nlp.beautifulsoup import scraping_bbc
 import sys
 import numpy as np
 import re
