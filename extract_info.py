@@ -21,15 +21,13 @@ from corpus_processing import relation_extraction as re
 from corpus_processing import relation_linking as rl
 from corpus_processing import entity_linking as el
 
-# Constants
-DIR_DATA = Path("data")
-FNAME_WARC = "warcs/sample.warc.gz"
+def extract_info(html_doc, warc_trec_id):
+    
 
-# Step 1: Read warc file and iterate through the warc file and extract the html-documents and the warc-trec-ids
-print(f"Reading warc file...")
-first_page = read_warc(DIR_DATA / FNAME_WARC).iloc[0]
+
+# Constants
 # Step 2: NLP Preprocessing
-print(first_page)
+
 # Step 3: Named Entity Recognition
 
 # Step 4: Entity linking
