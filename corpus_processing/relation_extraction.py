@@ -8,7 +8,7 @@ from spacy.matcher import Matcher
 nlp = spacy.load("en_core_web_trf")
 
 
-def find_verbs(doc):
+def _find_verbs(doc):
     matcher = Matcher(nlp.vocab)
     pattern = [[{"POS": "VERB"}]]
     matcher.add("Verbs", pattern)
@@ -19,14 +19,14 @@ def find_verbs(doc):
     return verbs
 
 
-def longest_span(spans):
+def _longest_span(spans):
     if len(spans) == 0:
         return None
     sorted_spans = sorted(spans, key=lambda s: len(s), reverse=True)
     return sorted_spans[0]
 
 
-def create_spans(verbs, doc):
+def _create_spans(verbs, doc):
     patterns = [
         [{"POS": "VERB"}, {"POS": "PART", "OP": "*"}, {"POS": "ADV", "OP": "*"}],
         [
@@ -49,13 +49,13 @@ def create_spans(verbs, doc):
     res = []
     for verb in verbs:
         verbspans = [span for span in spans if verb in span]
-        span = longest_span(verbspans)
+        span = _longest_span(verbspans)
         res.append(span)
 
     return res
 
 
-def create_relation(span, span_index, entities):
+def _create_relation(span, span_index, entities):
 
     # Find left
     left_ent = None
@@ -73,15 +73,15 @@ def create_relation(span, span_index, entities):
     return relation
 
 
-def relation_extraction(doc):
+def _relation_extraction(doc):
     entities = doc.ents
     print(entities)
-    verbs = find_verbs(doc)
-    verbspans = create_spans(verbs, doc)
+    verbs = _find_verbs(doc)
+    verbspans = _create_spans(verbs, doc)
     relations = []
     for span in verbspans:
         span_index = doc.text.index(span)
-        relation = create_relation(span, span_index, entities)
+        relation = _create_relation(span, span_index, entities)
 
         relations.append(relation)
 
@@ -92,4 +92,7 @@ def extract_relations(input_text):
     clusters = nlp(input_text)
     print(clusters.spans)
     doc = nlp(input_text)
-    return relation_extraction(doc)
+    return _relation_extraction(doc)
+
+
+image.png

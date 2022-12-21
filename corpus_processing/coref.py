@@ -1,14 +1,19 @@
 import spacy
+
 nlp = spacy.load("en_coreference_web_trf")
+
 
 def getClusters(text):
     doc = nlp(text)
     return doc
 
+
 def coref_resolution(text):
     output = ""
     doc = getClusters(text)
-    clusters = [val for key, val in doc.spans.items() if key.startswith("coref_cluster")]
+    clusters = [
+        val for key, val in doc.spans.items() if key.startswith("coref_cluster")
+    ]
     token_dict = {}
     for cluster in clusters:
         first = cluster[0]
@@ -16,7 +21,6 @@ def coref_resolution(text):
             token_dict[repeats[0].idx] = first.text
 
             for token in repeats[1:]:
-
 
                 token_dict[token.idx] = ""
     for token in doc:
@@ -27,4 +31,3 @@ def coref_resolution(text):
             output += token.text + token.whitespace_
 
     return output
-
