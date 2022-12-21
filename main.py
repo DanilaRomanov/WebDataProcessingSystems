@@ -1,3 +1,12 @@
+
+# %% imports
+from nlp.get_nlp_doc import get_nlp_doc
+from nlp.nlp_preprocessing import nlp_preprocessing
+from corpus_processing.clausie_relation_extraction import clausie_rel_extract
+from corpus_processing.entity_relation_linking import entity_relation_linking
+from ner import ner
+import spacy
+
 import pandas as pd
 from pathlib import Path
 from nlp.read_warc2 import read_warc
