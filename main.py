@@ -18,15 +18,15 @@ nlp.add_pipe("entityLinker", last=True)  # entity linker
 claucy.add_to_pipe(nlp)  # Open IE
 
 
-warc_file = 'sample texts/sample.warc'
+warc_file = "sample texts/sample.warc"
 
 df = read_warc(warc_file)
 # %%
 
 # MAIN NLP PIPELINE
 for index, row in df.head(1).iterrows():
-    html_doc = row['HTML_DOC']
-    warc_trec_id = row['WARC-TREC-ID']
+    html_doc = row["HTML_DOC"]
+    warc_trec_id = row["WARC-TREC-ID"]
 
     doc = get_nlp_doc(html_doc, nlp)
     tokens_df = nlp_preprocessing(doc)
