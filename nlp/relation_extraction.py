@@ -1,10 +1,11 @@
 import spacy
 import pathlib
-import coref
 import numpy as np
 import pandas as pd
 from spacy.matcher import Matcher
+
 nlp = spacy.load("en_core_web_md")
+
 
 def find_verbs(doc):
     matcher = Matcher(nlp.vocab)
@@ -17,20 +18,25 @@ def find_verbs(doc):
     return verbs
 
 
-
 def longest_span(spans):
-    if (len(spans) == 0):
+    if len(spans) == 0:
         return None
     sorted_spans = sorted(spans, key=lambda s: len(s), reverse=True)
     return sorted_spans[0]
 
 
-
 def create_spans(verbs, doc):
-    patterns = [[{"POS": "VERB"}, {"POS": "PART", "OP": "*"}, {"POS": "ADV", "OP": "*"}],
-                [{"POS": "VERB"}, {"POS": "ADP", "OP": "*"}, {"POS": "DET", "OP": "*"},
-                 {"POS": "AUX", "OP": "*"},
-                 {"POS": "ADJ", "OP": "*"}, {"POS": "ADV", "OP": "*"}]]
+    patterns = [
+        [{"POS": "VERB"}, {"POS": "PART", "OP": "*"}, {"POS": "ADV", "OP": "*"}],
+        [
+            {"POS": "VERB"},
+            {"POS": "ADP", "OP": "*"},
+            {"POS": "DET", "OP": "*"},
+            {"POS": "AUX", "OP": "*"},
+            {"POS": "ADJ", "OP": "*"},
+            {"POS": "ADV", "OP": "*"},
+        ],
+    ]
 
     matcher = Matcher(nlp.vocab)
     matcher.add("Fluff", patterns)
@@ -45,7 +51,6 @@ def create_spans(verbs, doc):
         res.append(span)
 
     return res
-
 
 
 def create_relation(span, span_index, entities):
@@ -64,6 +69,7 @@ def create_relation(span, span_index, entities):
     relation = (span, left_ent, right_ent)
     return relation
 
+
 def relation_extraction(text):
     doc = nlp(text)
     entities = doc.ents
@@ -77,7 +83,4 @@ def relation_extraction(text):
         relation = create_relation(span, span_index, entities)
 
         relations.append(relation)
-
-    print(relations)
-    print(len(relations))
     return relations

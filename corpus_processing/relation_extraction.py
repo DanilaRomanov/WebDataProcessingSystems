@@ -75,7 +75,6 @@ def _create_relation(span, span_index, entities):
 
 def _relation_extraction(doc):
     entities = doc.ents
-    print(entities)
     verbs = _find_verbs(doc)
     verbspans = _create_spans(verbs, doc)
     relations = []
@@ -90,9 +89,5 @@ def _relation_extraction(doc):
 
 def extract_relations(input_text):
     clusters = nlp(input_text)
-    print(clusters.spans)
     doc = nlp(input_text)
     return _relation_extraction(doc)
-
-
-image.png

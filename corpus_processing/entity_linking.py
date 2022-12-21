@@ -35,6 +35,8 @@ def _get_wikipedia_articles(named_entity):
         # links.append(link)
 
     # Return the list of links
+    # Return time taken for this function
+
     return links
 
 
