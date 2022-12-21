@@ -42,7 +42,7 @@ def print_results(entity_result, relations_result):
         )
 
 
-def extract_info(html_doc, warc_trec_id):
+def extract_info_from_warc(html_doc, warc_trec_id):
     # First strip the webpage of all the html tags)
     stripped_webpage = bsp.scrape_webpage(html_doc)
     print("[+] Removed HTML tags from webpage")
