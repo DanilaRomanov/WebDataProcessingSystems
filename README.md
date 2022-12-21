@@ -1,5 +1,8 @@
 # WebDataProcessingSystems
 
+Installation instructions:
 
+1. pip install -r requirements.txt (In project folder)
 
-https://github.com/explosion/spacy-experimental/releases/download/v0.6.0/en_coreference_web_trf-3.4.0a0-py3-none-any.whl
+2. python -m spacy download en_core_web_md
+
