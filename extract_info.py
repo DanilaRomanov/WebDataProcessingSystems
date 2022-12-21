@@ -59,6 +59,22 @@ def extract_info_from_warc(html_doc, warc_trec_id):
     print("[+] Named Entity Recognition done")
 
     # --- Entity Linking ---
+
+    allowed_entity_types = [
+        "PERSON",
+        "NORP",
+        "FAC",
+        "ORG",
+        "GPE",
+        "LOC",
+        "PRODUCT",
+        "EVENT",
+        "WORK_OF_ART",
+        "LAW",
+        "LANGUAGE",
+        "DATE",
+    ]
+    ner_page = ner_page[ner_page["ner_type"].isin(allowed_entity_types)]
     entities_to_link = ner_page["label"].to_list()
     linked_entities = []
     for entity in tqdm(entities_to_link, desc="Entity"):
